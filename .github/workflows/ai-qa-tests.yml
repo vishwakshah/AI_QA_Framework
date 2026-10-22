@@ -1,26 +1,42 @@
+
+# Name displayed on the GitHub Actions page
 name: AI QA Tests
 
+# Define when this workflow should run
 on:
+  # Run automatically whenever code is pushed to the main branch
   push:
-    branches: [main]
+    branches: [qa]
+
+  # Run when a pull request targets the main branch
   pull_request:
     branches: [main]
 
+# Define the jobs that GitHub Actions will execute
 jobs:
+  # Job identifier; we named this job "test"
   test:
+    # Run this job on a GitHub-hosted Ubuntu machine
     runs-on: ubuntu-latest
 
+    # Execute these steps in order
     steps:
+      # Step 1: Download the repository code onto the runner
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Step 2: Set up Python 3.12 on the runner
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
+          # Python version required by this project
           python-version: "3.12"
 
+      # Step 3: Install all packages listed in requirements.txt
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      # Step 4: Run the API tests inside the tests/api folder
+      # -q means quiet output (less detailed test output)
       - name: Run API tests
         run: python -m pytest tests/api -q
